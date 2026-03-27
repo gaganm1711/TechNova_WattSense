@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .rank-row { display: grid; grid-template-columns: 50px 1fr 100px; padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); align-items: center; transition: 0.2s; }
+        .rank-row:hover { background: rgba(255,255,255,0.03); }
+        .rank-num { font-size: 1.5rem; font-weight: 800; color: var(--text-muted); text-align: center; }
+        .rank-1 .rank-num { color: var(--accent-gold); text-shadow: 0 0 10px rgba(255,204,0,0.5); font-size: 2rem;}
+        .rank-2 .rank-num { color: #silver; font-size: 1.8rem;}
+        .rank-3 .rank-num { color: #cd7f32; font-size: 1.6rem;}
+        .rank-me { background: rgba(10,132,255,0.1) !important; border-left: 4px solid var(--accent-blue); }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">National Leaderboard</h1>
+            <p class="page-subtitle">Ranked by total phantom wattage mitigated.</p>
+        </div>
+        <select style="padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; outline: none; border: 1px solid var(--border-color);">
+            <option>All India</option>
+            <option>My City (Mumbai)</option>
+            <option>My Friends</option>
+        </select>
+    </div>
+
+    <!-- Top 3 Podium UI -->
+    <div class="grid-3 mb-20" style="align-items: flex-end;">
+        <div class="glass-panel" style="padding: 20px; text-align: center; border-color: silver; background: linear-gradient(to top, rgba(192,192,192,0.1), transparent);">
+            <i class="fa-solid fa-medal" style="color: silver; font-size: 3rem; margin-bottom: 15px;"></i>
+            <h3>Rahul M.</h3>
+            <div class="text-green font-weight-600 mt-10">4,120 W Saved</div>
+        </div>
+        
+        <div class="glass-panel" style="padding: 30px; text-align: center; border-color: var(--accent-gold); background: linear-gradient(to top, rgba(255,204,0,0.1), transparent); box-shadow: 0 0 30px rgba(255,204,0,0.2);">
+            <i class="fa-solid fa-trophy text-gold" style="font-size: 4rem; margin-bottom: 15px;"></i>
+            <h2>EcoWarrior</h2>
+            <div class="text-green mt-10" style="font-weight: 800; font-size: 1.2rem;">5,400 W Saved</div>
+        </div>
+
+        <div class="glass-panel" style="padding: 20px; text-align: center; border-color: #cd7f32; background: linear-gradient(to top, rgba(205,127,50,0.1), transparent);">
+            <i class="fa-solid fa-medal" style="color: #cd7f32; font-size: 3rem; margin-bottom: 15px;"></i>
+            <h3>Sneha P.</h3>
+            <div class="text-green font-weight-600 mt-10">3,890 W Saved</div>
+        </div>
+    </div>
+
+    <!-- Ladder -->
+    <div class="glass-panel" style="padding: 0;">
+        <div class="rank-row rank-1">
+            <div class="rank-num">1</div>
+            <div><strong>EcoWarrior</strong> <span class="text-muted text-sm ml-10">Mumbai, MH</span></div>
+            <div class="text-green" style="text-align: right; font-weight: 600;">5.4k W</div>
+        </div>
+        <div class="rank-row rank-2">
+            <div class="rank-num">2</div>
+            <div><strong>Rahul M.</strong> <span class="text-muted text-sm ml-10">Pune, MH</span></div>
+            <div class="text-green" style="text-align: right; font-weight: 600;">4.1k W</div>
+        </div>
+        <div class="rank-row rank-3">
+            <div class="rank-num">3</div>
+            <div><strong>Sneha P.</strong> <span class="text-muted text-sm ml-10">Delhi, DL</span></div>
+            <div class="text-green" style="text-align: right; font-weight: 600;">3.8k W</div>
+        </div>
+        <div class="rank-row">
+            <div class="rank-num">4</div>
+            <div><strong>TechSaver</strong> <span class="text-muted text-sm ml-10">Bangalore, KA</span></div>
+            <div class="text-green" style="text-align: right; font-weight: 600;">2.1k W</div>
+        </div>
+        <div class="rank-row rank-me">
+            <div class="rank-num">5</div>
+            <div><strong>You</strong> <span class="badge text-sm" style="background:var(--accent-blue); padding:3px 8px; border-radius:12px; margin-left:10px;">Current</span></div>
+            <div class="text-green" style="text-align: right; font-weight: 600;">1.2k W</div>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>injectNavigation('leaderboard');</script>
+</body>
+</html>

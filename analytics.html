@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Deep Analytics</h1>
+            <p class="page-subtitle">Track your historical phantom load reduction patterns over time.</p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-outline active" style="width: auto;">7 Days</button>
+            <button class="btn-outline" style="width: auto;">30 Days</button>
+            <button class="btn-outline" style="width: auto;">1 Year</button>
+        </div>
+    </div>
+
+    <!-- Overview Stats -->
+    <div class="grid-3 mb-20">
+        <div class="glass-panel" style="padding: 24px;">
+            <div class="text-muted text-sm mb-10"><i class="fa-solid fa-arrow-down text-green"></i> 14% vs Last Week</div>
+            <div style="font-size: 2rem; font-weight: 800;">₹450</div>
+            <div class="text-muted mt-10">Total Weekly Phantom Cost</div>
+        </div>
+        <div class="glass-panel" style="padding: 24px;">
+            <div class="text-muted text-sm mb-10"><i class="fa-solid fa-arrow-down text-green"></i> 12% vs Last Week</div>
+            <div style="font-size: 2rem; font-weight: 800;">53.2 kg</div>
+            <div class="text-muted mt-10">Total CO₂ Mitigated</div>
+        </div>
+        <div class="glass-panel" style="padding: 24px;">
+            <div class="text-muted text-sm mb-10"><i class="fa-solid fa-arrow-up text-red"></i> 2 Days Spike</div>
+            <div style="font-size: 2rem; font-weight: 800;">Set-top Box</div>
+            <div class="text-muted mt-10">Most Frequent Vampire</div>
+        </div>
+    </div>
+
+    <!-- Main Historical Graph -->
+    <div class="glass-panel" style="padding: 30px; margin-bottom: 30px;">
+        <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-chart-area text-blue"></i> 7-Day Efficiency Trend</h3>
+        <div style="height: 350px;">
+            <canvas id="historicalChart"></canvas>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>
+        injectNavigation('analytics');
+        
+        const ctx = document.getElementById('historicalChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Phantom Cost (₹)',
+                    data: [80, 85, 75, 50, 40, 45, 75],
+                    backgroundColor: 'rgba(10, 132, 255, 0.8)',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

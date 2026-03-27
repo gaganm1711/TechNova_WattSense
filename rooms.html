@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Dynamic Blueprint Heatmap</h1>
+            <p class="page-subtitle">Realtime DB projection of room load distribution.</p>
+        </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom: 30px;">
+        <!-- Chart.js DOM Space -->
+        <div class="glass-panel" style="padding: 30px; display: flex; flex-direction: column; justify-content: center;">
+            <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-map"></i> Active Load by Room</h3>
+            <div style="height: 300px;">
+                <canvas id="roomDoughnut"></canvas>
+            </div>
+        </div>
+
+        <!-- Dynamic List Injection -->
+        <div style="display: flex; flex-direction: column; gap: 20px;" id="room-list">
+            <div class="text-center mt-15 text-muted"><i class="fa-solid fa-spinner fa-spin"></i> Loading Database...</div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/nav.js"></script>
+    <script>
+        Session.requireAuth();
+        injectNavigation('rooms');
+        
+        async function bootRooms() {
+            const devices = await API.getDevices();
+            const active = devices.filter(d => d.pluggedIn);
+            
+            // Map rooms
+            const roomMap = {};
+            let totalW = 0;
+            active.forEach(d => {
+                const w = d.standbyPowerW;
+                if(!roomMap[d.room]) roomMap[d.room] = { watts: 0, devices: [] };
+                roomMap[d.room].watts += w;
+                roomMap[d.room].devices.push(d);
+                totalW += w;
+            });
+
+            const labels = Object.keys(roomMap);
+            const data = labels.map(r => roomMap[r].watts);
+            
+            // Chart rendering
+            const ctx = document.getElementById('roomDoughnut').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: { 
+                    labels: labels, 
+                    datasets: [{ 
+                        data: data, 
+                        backgroundColor: ['#ff3b30', '#ffcc00', '#0a84ff', '#34c759', '#a28bfa'], 
+                        borderWidth: 1, borderColor: '#151b2b' 
+                    }] 
+                },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#f8fafc' } } } }
+            });
+
+            // List rendering
+            const listDiv = document.getElementById('room-list');
+            listDiv.innerHTML = '';
+            
+            labels.forEach(roomName => {
+                const rm = roomMap[roomName];
+                const pct = totalW > 0 ? Math.round((rm.watts / totalW) * 100) : 0;
+                const cost = ((rm.watts * 24 * 365)/1000) * 8.0;
+                
+                const devicePills = rm.devices.map(d => `<span style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 6px;"><i class="fa-solid fa-${d.icon}"></i> ${d.name}</span>`).join('');
+
+                listDiv.innerHTML += `
+                <div class="glass-panel" style="padding: 20px; border-left: 4px solid var(--accent-blue);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="font-size: 1.3rem;">${roomName}</h3>
+                        <span style="font-weight: 800; color: var(--accent-blue);">${pct}% of Grid</span>
+                    </div>
+                    <div style="display: flex; gap: 10px; color: var(--text-muted); font-size: 0.9rem; flex-wrap: wrap;">
+                        ${devicePills}
+                    </div>
+                    <div style="margin-top: 15px; font-weight: 600;">₹${Math.round(cost)} / year wasted here</div>
+                </div>
+                `;
+            });
+        }
+        bootRooms();
+    </script>
+</body>
+</html>

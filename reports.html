@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .report-item { display: flex; align-items: center; justify-content: space-between; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 15px; border: 1px solid transparent; transition: 0.2s;}
+        .report-item:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Weekly Summaries</h1>
+            <p class="page-subtitle">Downloadable and automated diagnostic logs assessing your home grid footprint.</p>
+        </div>
+        <button class="btn-primary" style="width: auto;"><i class="fa-solid fa-envelope"></i> Email Latest</button>
+    </div>
+
+    <!-- Active automated generation status -->
+    <div class="glass-panel mb-20" style="padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(10,132,255,0.05); border-left: 4px solid var(--accent-blue);">
+        <i class="fa-solid fa-robot text-blue" style="font-size: 2rem;"></i>
+        <div>
+            <h4 style="margin-bottom: 5px;">Auto-Generation Active</h4>
+            <p class="text-sm text-muted">A new PDF summarizing all detected Energy Vampires and phantom leak events is generated every Sunday at Midnight.</p>
+        </div>
+    </div>
+
+    <!-- List of previous reports -->
+    <div class="glass-panel" style="padding: 30px;">
+        <h3 style="margin-bottom: 25px;"><i class="fa-solid fa-folder-open text-gold"></i> Archived Reports</h3>
+        
+        <div class="report-item">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="font-size: 2rem; color: #ff3b30;"><i class="fa-solid fa-file-pdf"></i></div>
+                <div>
+                    <div style="font-weight: 600; font-size: 1.1rem;">Week 4 - October 2026</div>
+                    <div class="text-sm text-muted mt-10">4.2 MB • Generated: 25/10/2026 • 3 Devices Flagged</div>
+                </div>
+            </div>
+            <button class="btn-outline" style="width: auto;"><i class="fa-solid fa-download"></i> Download</button>
+        </div>
+
+        <div class="report-item">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="font-size: 2rem; color: #ff3b30;"><i class="fa-solid fa-file-pdf"></i></div>
+                <div>
+                    <div style="font-weight: 600; font-size: 1.1rem;">Week 3 - October 2026</div>
+                    <div class="text-sm text-muted mt-10">4.1 MB • Generated: 18/10/2026 • 4 Devices Flagged</div>
+                </div>
+            </div>
+            <button class="btn-outline" style="width: auto;"><i class="fa-solid fa-download"></i> Download</button>
+        </div>
+
+        <div class="report-item">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <div style="font-size: 2rem; color: #ff3b30;"><i class="fa-solid fa-file-pdf"></i></div>
+                <div>
+                    <div style="font-weight: 600; font-size: 1.1rem;">Week 2 - October 2026</div>
+                    <div class="text-sm text-muted mt-10">3.9 MB • Generated: 11/10/2026 • 5 Devices Flagged</div>
+                </div>
+            </div>
+            <button class="btn-outline" style="width: auto;"><i class="fa-solid fa-download"></i> Download</button>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>injectNavigation('reports');</script>
+</body>
+</html>

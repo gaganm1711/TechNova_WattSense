@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="center-screen">
+    <div class="glass-panel auth-box" style="max-width: 500px;">
+        <div class="auth-logo"><i class="fa-solid fa-leaf text-green"></i> WattSense</div>
+        <h2 class="mb-20">Join the Efficiency Grid</h2>
+        <p class="text-muted mb-20">Save ₹3,000+ by stopping phantom leaks.</p>
+        
+        <div id="error-box" class="text-red text-sm mb-20 hidden"></div>
+
+        <form id="signupForm">
+            <div class="grid-2" style="gap: 10px;">
+                <div class="input-group">
+                    <label>First Name</label>
+                    <input type="text" id="fname" placeholder="John" required>
+                </div>
+                <div class="input-group">
+                    <label>Last Name</label>
+                    <input type="text" id="lname" placeholder="Doe" required>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="you@example.com" required>
+            </div>
+            <div class="input-group">
+                <label>Create Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="padding: 15px; font-size: 1.1rem;">Create Account</button>
+        </form>
+
+        <p class="mt-15 text-muted">Already have an account? <a href="login.html" class="text-blue">Sign In</a></p>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fname = document.getElementById('fname').value;
+            const lname = document.getElementById('lname').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                await API.signup(fname, lname, email, password);
+                window.location.href = 'onboarding.html';
+            } catch (err) {
+                const box = document.getElementById('error-box');
+                box.innerText = err.message;
+                box.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

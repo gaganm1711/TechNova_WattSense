@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .post { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .post-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1.2rem; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Savings Community</h1>
+            <p class="page-subtitle">Discuss advanced phantom bleeding mitigation algorithms and IoT tips.</p>
+        </div>
+        <button class="btn-primary" style="width: auto;"><i class="fa-solid fa-pen"></i> New Topic</button>
+    </div>
+
+    <div class="grid-3" style="grid-template-columns: 2fr 1fr;">
+        <div class="glass-panel" style="padding: 0;">
+            <div class="post">
+                <div class="post-header">
+                    <div class="avatar">R</div>
+                    <div>
+                        <div style="font-weight: 600;">Rahul M. <span class="badge" style="background:var(--accent-gold); color:#000; font-size:0.7rem; padding: 2px 5px; border-radius: 4px;">Top Contributor</span></div>
+                        <div class="text-muted text-sm">2 hours ago</div>
+                    </div>
+                </div>
+                <h3 style="margin-bottom: 10px;">Why your Amazon Echo wastes ₹600/yr playing dead.</h3>
+                <p class="text-muted" style="line-height: 1.6;">Smart speakers constantly listen to keywords via onboard ICs triggering persistent 5W to 7W idle limits. Using a schedule-based IoT gate bypasses...</p>
+                <div style="display: flex; gap: 15px; margin-top: 15px; color: var(--text-muted); font-size: 0.9rem;">
+                    <span><i class="fa-solid fa-heart text-red"></i> 45 Likes</span>
+                    <span><i class="fa-solid fa-comment"></i> 12 Replies</span>
+                </div>
+            </div>
+
+            <div class="post">
+                <div class="post-header">
+                    <div class="avatar" style="background: var(--accent-green);">S</div>
+                    <div>
+                        <div style="font-weight: 600;">Sneha P.</div>
+                        <div class="text-muted text-sm">5 hours ago</div>
+                    </div>
+                </div>
+                <h3 style="margin-bottom: 10px;">Is the Set-top box estimation accurate?</h3>
+                <p class="text-muted" style="line-height: 1.6;">WattSense warned me about ₹1,000/yr losses on the set-top box. Used a physical multimeter today and it actually drew 16.5W! Crazy accurate.</p>
+                <div style="display: flex; gap: 15px; margin-top: 15px; color: var(--text-muted); font-size: 0.9rem;">
+                    <span><i class="fa-solid fa-heart text-red"></i> 122 Likes</span>
+                    <span><i class="fa-solid fa-comment"></i> 34 Replies</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="glass-panel" style="padding: 20px;">
+                <h4 style="margin-bottom: 15px; color: var(--text-muted); text-transform: uppercase;">Trending Tags</h4>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <span style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 6px; font-size: 0.85rem;">#IoT_Plugs</span>
+                    <span style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 6px; font-size: 0.85rem;">#Hackathon</span>
+                    <span style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 6px; font-size: 0.85rem;">#PhantomPower</span>
+                    <span style="background: rgba(255,255,255,0.05); padding: 5px 10px; border-radius: 6px; font-size: 0.85rem;">#ESP8266</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>injectNavigation('community');</script>
+</body>
+</html>

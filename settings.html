@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Platform Settings</h1>
+            <p class="page-subtitle">Configure your home profile, hardware API keys, and notification thresholds.</p>
+        </div>
+        <button class="btn-primary" style="width: auto;"><i class="fa-solid fa-save"></i> Save Changes</button>
+    </div>
+
+    <div class="grid-2">
+        <div class="glass-panel" style="padding: 30px;">
+            <h3 style="margin-bottom: 25px;"><i class="fa-solid fa-user text-blue"></i> Profile Configuration</h3>
+            <div class="input-group">
+                <label>Display Name</label>
+                <input type="text" value="Rahul M.">
+            </div>
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" value="rahul.m@example.com" disabled style="opacity: 0.5;">
+            </div>
+            <div class="input-group">
+                <label>Household Type</label>
+                <select>
+                    <option>1 BHK Apartment</option>
+                    <option selected>2 BHK Apartment</option>
+                    <option>3 BHK Apartment</option>
+                    <option>Independent House</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding: 30px;">
+            <h3 style="margin-bottom: 25px;"><i class="fa-solid fa-bell text-gold"></i> Automation & Alerts</h3>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div>
+                    <h4 style="margin-bottom: 5px;">Push Notifications</h4>
+                    <span class="text-sm text-muted">Get alerted when a vampire leak exceeds 20W.</span>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div>
+                    <h4 style="margin-bottom: 5px;">Weekly PDF Report Generation</h4>
+                    <span class="text-sm text-muted">Aggregates leak metrics every Sunday midnight.</span>
+                </div>
+                <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h4 style="margin-bottom: 5px;">Auto-Isolate Smart Plugs</h4>
+                    <span class="text-sm text-muted">Automatically cuts power to ESP8266 devices if leak detected.</span>
+                </div>
+                <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+            </div>
+        </div>
+
+        <div class="glass-panel" style="padding: 30px; grid-column: span 2;">
+            <h3 style="margin-bottom: 25px;"><i class="fa-solid fa-code text-green"></i> Developer API Settings</h3>
+            <p class="text-muted text-sm mb-20" style="max-width: 600px;">Use this API Key to provision custom hardware (e.g. Raspberry Pi, ESP32) manually to link with the WattSense Fast API backend.</p>
+            
+            <div class="input-group" style="display: flex; gap: 10px;">
+                <input type="text" value="sk_live_ws_392f8a92b1c4e5d6" readonly style="flex: 1; font-family: monospace; color: var(--accent-green);">
+                <button class="btn-outline" style="width: auto;"><i class="fa-solid fa-copy"></i> Copy</button>
+                <button class="btn-outline text-red" style="width: auto;"><i class="fa-solid fa-rotate"></i> Revoke</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>injectNavigation('settings');</script>
+</body>
+</html>

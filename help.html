@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .faq-item { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; margin-bottom: 15px; border-left: 3px solid var(--accent-blue); }
+        .faq-item h4 { margin-bottom: 10px; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Help & Support</h1>
+            <p class="page-subtitle">Learn exactly how the WattSense phantom leak algorithms work.</p>
+        </div>
+    </div>
+
+    <div class="grid-2" style="grid-template-columns: 2fr 1fr;">
+        <!-- FAQ -->
+        <div class="glass-panel" style="padding: 30px;">
+            <h3 style="margin-bottom: 25px;"><i class="fa-solid fa-book-open text-blue"></i> Frequently Asked Questions</h3>
+            
+            <div class="faq-item">
+                <h4>What is Phantom Power (Standby Loss)?</h4>
+                <p class="text-muted text-sm" style="line-height: 1.6;">Even when appliances are physically turned "off", if they remain plugged into a live socket, internal transformers and IC chips draw a continuous current. This is called Phantom Power or Vampire Load. Over 1 year, a household loses an average of ₹3,500 just to this invisibile drain.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>How accurate is the financial prediction simulator?</h4>
+                <p class="text-muted text-sm" style="line-height: 1.6;">Extremely. We multiply the hardware's recorded standby wattage by 24 hours x 365 days, and multiply that kWh metric against the ₹8.0/kWh standard Indian metric to determine direct fiscal loss per year.</p>
+            </div>
+
+            <div class="faq-item">
+                <h4>How do I integrate a hardware ESP8266 plug?</h4>
+                <p class="text-muted text-sm" style="line-height: 1.6;">Navigate to the `IoT Smart Plugs` dedicated dashboard. Add the localized IP of your ESP32/ESP8266 chip connected to the relay. WattSense's FastAPI backend will then dispatch HTTP ON/OFF requests automatically based on threshold rules.</p>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="glass-panel" style="padding: 30px; height: fit-content;">
+            <h3 style="margin-bottom: 25px;"><i class="fa-solid fa-headset text-green"></i> Support Ticket</h3>
+            <div class="input-group">
+                <label>Topic</label>
+                <select>
+                    <option>Billing Issue</option>
+                    <option>Hardware Integration</option>
+                    <option>Bug Report</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label>Message</label>
+                <textarea rows="5" placeholder="Describe your issue..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: #fff; resize: vertical;"></textarea>
+            </div>
+            <button class="btn-primary"><i class="fa-solid fa-paper-plane"></i> Submit Ticket</button>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>injectNavigation('help');</script>
+</body>
+</html>

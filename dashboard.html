@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Insights - WattSense Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .ai-summary { background: linear-gradient(135deg, rgba(10,132,255,0.1), rgba(52,199,89,0.1)); border: 1px solid var(--accent-blue); padding: 30px; border-radius: 16px; margin-bottom: 30px; }
+        .equiv-card { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 12px; height: 100%; border-top: 3px solid transparent;}
+        .canvas-bg { background: rgba(255,255,255,0.02); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.05);}
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">OCR & CV Diagnostics</h1>
+            <p class="page-subtitle">Reconciling billed metrics against visually scanned appliance leaks.</p>
+        </div>
+        <button onclick="window.location.href='setup-vision.html'" class="btn-outline text-blue" style="width: auto;"><i class="fa-solid fa-camera"></i> Scan More Items</button>
+    </div>
+
+    <!-- The Top AI Recommendation Banner requested by the user -->
+    <div class="ai-summary">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <i class="fa-solid fa-wand-magic-sparkles text-gold glow" style="font-size: 2rem;"></i>
+            <h2 style="margin: 0;">AI Strategic Summary</h2>
+        </div>
+        <p id="ai-suggestion-text" style="font-size: 1.1rem; line-height: 1.6; color: var(--text-muted);">
+            Analyzing extracted OCR bills and appliance geometries...
+        </p>
+    </div>
+
+    <div class="grid-2 mb-20">
+        <!-- Charting: Billed vs Appliances -->
+        <div class="canvas-bg">
+            <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-chart-column text-blue"></i> Energy Allocation Map (Monthly kWh)</h3>
+            <div style="height: 350px;">
+                <canvas id="discrepancyChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Equivalencies Panel requested by the user -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="equiv-card" style="border-color: var(--accent-green);">
+                <div style="display: flex; align-items: flex-start; gap: 20px;">
+                    <div style="background: rgba(52,199,89,0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; color: var(--accent-green);"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <div>
+                        <h4 style="color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Lost Purchasing Power</h4>
+                        <div id="buy-equiv" style="font-weight: 800; font-size: 1.6rem; margin: 5px 0;">Calculating...</div>
+                        <p class="text-sm text-muted">You could buy this every month if you unplugged idle devices.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="equiv-card" style="border-color: var(--accent-red);">
+                <div style="display: flex; align-items: flex-start; gap: 20px;">
+                    <div style="background: rgba(255,59,48,0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; color: var(--accent-red);"><i class="fa-solid fa-smog"></i></div>
+                    <div>
+                        <h4 style="color: var(--text-muted); text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px;">Real-World Environmental Harm</h4>
+                        <div id="harm-equiv" style="font-weight: 800; font-size: 1.5rem; margin: 5px 0; color: #ff3b30;">Calculating...</div>
+                        <p class="text-sm text-muted">Emitted directly into the atmosphere due to standby loads.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="equiv-card" style="background: transparent; border: 1px dashed rgba(255,255,255,0.2);">
+                <div style="display:flex; justify-content: space-between; align-items: center;">
+                    <span class="text-muted">Extracted Bill Load</span>
+                    <strong id="metric-bill" class="text-blue">0 kWh / month</strong>
+                </div>
+                <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <span class="text-muted">Detected Appliance Load</span>
+                    <strong id="metric-app" class="text-gold">0 kWh / month</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI Injectors -->
+    <script src="js/api.js"></script>
+    <script src="js/nav.js"></script>
+    <script>
+        Session.requireAuth();
+        injectNavigation('dashboard');
+        
+        async function bootVisionDashboard() {
+            // Load OCR Bill Info
+            const billData = JSON.parse(localStorage.getItem('ws_scanned_bill') || '{"rate_per_kwh": 8.0, "total_billed_kwh": 450}');
+            const TARRIF = billData.rate_per_kwh;
+            const TOTAL_BILLED = billData.total_billed_kwh;
+
+            // Load Scanned Devices (Since the user specified scanning them, we pull the cache)
+            const scannedAppliances = JSON.parse(localStorage.getItem('ws_scanned_devs') || "[]");
+            
+            // MATH FORMULAS EXPLICITLY DEFINED BY USER:
+            // Energy(kWh) = power(W) * 24 * 30 / 1000
+            let detectedEnergyKwh = 0;
+            let applianceBreakdown = [];
+            
+            scannedAppliances.forEach(dev => {
+                const kwh = (dev.standbyPowerW * 24 * 30) / 1000;
+                detectedEnergyKwh += kwh;
+                applianceBreakdown.push({ name: dev.name, kwh: Math.round(kwh) });
+            });
+
+            // Cost Estimation = rate * energy
+            const detectedCost = TARRIF * detectedEnergyKwh;
+            
+            // Carbon Emission = energy * 0.82
+            const carbonKg = detectedEnergyKwh * 0.82;
+
+            // Rendering Equivalencies
+            const buyOptions = [
+                { price: 199, name: "Basic Netflix Subscription" },
+                { price: 50, name: "Cups of Premium Coffee" },
+                { price: 400, name: "Pizza Deliveries" }
+            ];
+            
+            let buyText = "A few snacks";
+            if (detectedCost > 400) buyText = `${Math.floor(detectedCost/400)} Pizza Deliveries`;
+            else if (detectedCost > 199) buyText = "1 Month of Netflix";
+            else if (detectedCost > 50) buyText = `${Math.floor(detectedCost/50)} Premium Coffees`;
+            
+            document.getElementById('buy-equiv').innerText = buyText;
+
+            let harmText = `${carbonKg.toFixed(1)} kg of Toxins`;
+            if (carbonKg > 20) harmText = `Burning ${(carbonKg * 0.4).toFixed(1)} Litres of Petrol`;
+            if (carbonKg > 50) harmText = `Cutting down ${Math.floor(carbonKg / 20)} Trees`;
+            document.getElementById('harm-equiv').innerText = harmText;
+
+            // AI Summarization text generator
+            const missingLoad = TOTAL_BILLED - detectedEnergyKwh;
+            const wastePct = ((detectedEnergyKwh / TOTAL_BILLED) * 100).toFixed(1);
+            
+            let summary = `Your OCR utility bill shows a monthly consumption of ${TOTAL_BILLED} kWh. Through computer vision, we identified ${scannedAppliances.length} idle appliances draining ${detectedEnergyKwh.toFixed(1)} kWh (${wastePct}% of your total bill!). `;
+            
+            if (missingLoad > 50) {
+                summary += `There is a significant "Other" usage of ${missingLoad.toFixed(0)} kWh. You highly likely have an unscanned Heating/AC unit or Refrigerator leaking power. Consider scanning large kitchen units next.`;
+            } else {
+                summary += `You have mapped your entire house perfectly. Turn off the detected nodes to drop your bill immediately.`;
+            }
+            document.getElementById('ai-suggestion-text').innerText = summary;
+
+            document.getElementById('metric-bill').innerText = `${TOTAL_BILLED} kWh / month`;
+            document.getElementById('metric-app').innerText = `${detectedEnergyKwh.toFixed(1)} kWh / month`;
+
+            // CHARTJS: Stacked Bar showing Breakdown vs Others vs Total Bill
+            const ctx = document.getElementById('discrepancyChart').getContext('2d');
+            
+            // Prepare data: individual appliances, plus "Others" (missing load)
+            const labels = [];
+            const dataBase = [];
+            
+            applianceBreakdown.forEach(app => {
+                labels.push(`Scanned: ${app.name}`);
+                dataBase.push(app.kwh);
+            });
+            
+            if (missingLoad > 0) {
+                labels.push("Unscanned Load (Others)");
+                dataBase.push(Math.round(missingLoad));
+            }
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Estimated Monthly kWh',
+                        data: dataBase,
+                        backgroundColor: [
+                            ...applianceBreakdown.map(() => 'rgba(255, 204, 0, 0.8)'), // Appliances
+                            'rgba(10, 132, 255, 0.3)' // Unknown Others limit
+                        ],
+                        borderWidth: 1,
+                        borderColor: 'rgba(255,255,255,0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        bootVisionDashboard();
+    </script>
+</body>
+</html>

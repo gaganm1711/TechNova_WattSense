@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .dropzone { border: 2px dashed rgba(255,255,255,0.2); border-radius: 16px; padding: 40px 20px; text-align: center; cursor: pointer; transition: 0.3s; background: rgba(0,0,0,0.2); position: relative; overflow: hidden;}
+        .dropzone:hover { border-color: var(--accent-green); background: rgba(52,199,89,0.05); }
+        .dropzone input { display: none; }
+        .file-status { display: flex; align-items: center; justify-content: space-between; padding: 10px 15px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-top: 15px; display: none; }
+        .scan-line { position: absolute; left: 0; top: -100px; width: 100%; height: 5px; background: var(--accent-green); box-shadow: 0 0 20px var(--accent-green); opacity: 0; pointer-events: none; }
+        .scanning .scan-line { animation: scan 2s linear infinite; opacity: 1; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        .added-item { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05);}
+        .del-btn { background: none; border: none; color: var(--accent-red); cursor: pointer; transition: 0.2s; font-size: 1.1rem; padding: 5px; }
+        .del-btn:hover { text-shadow: 0 0 10px var(--accent-red); transform: scale(1.1); }
+        select, input { padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: #fff; width: 100%; outline: none; }
+        select option { background: #151b2b; }
+    </style>
+</head>
+<body class="center-screen">
+    <div class="glass-panel" style="width: 100%; max-width: 950px; padding: 40px;">
+        <h1 class="mb-10 text-center">Home Onboarding</h1>
+        <p class="text-muted text-center mb-30" style="font-size: 1.1rem;">Select your idle appliances from the list, then upload your electricity bill for OCR extraction.</p>
+
+        <div class="grid-2">
+            <!-- Manual Appliance Form -->
+            <div style="border-right: 1px solid rgba(255,255,255,0.1); padding-right: 30px;">
+                <h3 class="mb-15"><i class="fa-solid fa-plug text-blue"></i> 1. Select Appliances</h3>
+                
+                <div class="input-group">
+                    <label>Appliance Type</label>
+                    <select id="dev-preset" onchange="updatePreset()">
+                        <option value="Set-top Box|tv|15">📺 Set-top Box (~15W Standby)</option>
+                        <option value="Smart TV|display|5">🖥️ Smart TV (~5W Standby)</option>
+                        <option value="Wi-Fi Router|wifi|8">📶 Wi-Fi Router (~8W Standby)</option>
+                        <option value="Microwave|fire|4">♨️ Microwave (~4W Standby)</option>
+                        <option value="Gaming Console|gamepad|12">🎮 Gaming Console (~12W Standby)</option>
+                        <option value="Phone Charger|plug|1">🔌 Phone Charger (~1W Standby)</option>
+                        <option value="Desktop Computer|display|10">💻 Desktop PC (~10W Standby)</option>
+                        <option value="Smart Speaker|wifi|3">🔈 Smart Speaker (~3W Standby)</option>
+                    </select>
+                </div>
+
+                <div class="grid-2" style="gap: 10px;">
+                    <div class="input-group">
+                        <label>Category Icon</label>
+                        <select id="dev-icon">
+                            <option value="tv">Television</option>
+                            <option value="plug">General Plug</option>
+                            <option value="wifi">Router/Network</option>
+                            <option value="gamepad">Gaming Console</option>
+                            <option value="fire">Heating/Microwave</option>
+                            <option value="display">Display/Monitor</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Exact Watts</label>
+                        <input type="number" id="dev-watts" value="15">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Assign to Room</label>
+                    <select id="dev-room">
+                        <option>Living Room</option>
+                        <option>Bedroom</option>
+                        <option>Kitchen</option>
+                        <option>Study</option>
+                        <option>Hallway</option>
+                    </select>
+                </div>
+                
+                <button id="btn-add-dev" class="btn-primary mb-15" style="width: 100%;"><i class="fa-solid fa-plus"></i> Add to Profile List</button>
+                
+                <!-- Added List -->
+                <div id="added-devices" style="max-height: 200px; overflow-y: auto; padding-right: 5px; margin-top: 15px;"></div>
+            </div>
+
+            <!-- OCR Bill Dropzone -->
+            <div style="padding-left: 10px;">
+                <h3 class="mb-15"><i class="fa-solid fa-file-invoice-dollar text-green"></i> 2. OCR Electricity Bill</h3>
+                <label id="drop-bill" class="dropzone" style="display: block;">
+                    <input type="file" id="file-bill" accept="image/*">
+                    <i class="fa-solid fa-cloud-arrow-up text-green" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                    <h4>Upload Monthly Bill</h4>
+                    <p class="text-muted text-sm mt-10">AI will automatically decode the utility tariffs.</p>
+                    <div class="scan-line"></div>
+                </label>
+                <div id="status-bill" class="file-status">
+                    <span id="txt-bill"><i class="fa-solid fa-spinner fa-spin"></i> Extracting Target Matrix...</span>
+                    <i class="fa-solid fa-check text-green hidden" id="check-bill"></i>
+                </div>
+
+                <div style="background: rgba(10,132,255,0.05); border: 1px solid rgba(10,132,255,0.2); padding: 15px; border-radius: 8px; margin-top: 25px; display: flex; gap: 15px; align-items: flex-start;">
+                    <i class="fa-solid fa-circle-info text-blue" style="font-size: 1.5rem;"></i>
+                    <p class="text-sm text-muted">A clear photograph of the <strong>Usage Details</strong> section guarantees optimal Groq Llama-3 parsing.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 30px;">
+            <button id="btn-continue" class="btn-primary" style="padding: 15px 40px; font-size: 1.2rem; opacity: 0.5; pointer-events: none;">Initialize AI Dashboard <i class="fa-solid fa-bolt ml-10 text-gold"></i></button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        Session.requireAuth();
+        let billDone = false;
+
+        
+        // Ensure starting clean memory for Demo purposes
+        localStorage.setItem('ws_scanned_devs', "[]");
+
+        function updatePreset() {
+            const val = document.getElementById('dev-preset').value;
+            const [name, icon, watts] = val.split('|');
+            document.getElementById('dev-icon').value = icon;
+            document.getElementById('dev-watts').value = watts;
+        }
+
+        function checkCompletion() {
+            const db = JSON.parse(localStorage.getItem('ws_scanned_devs') || "[]");
+            if(db.length > 0 && billDone) {
+                const btn = document.getElementById('btn-continue');
+                btn.style.opacity = 1;
+                btn.style.pointerEvents = 'all';
+                btn.onclick = () => window.location.href = 'dashboard.html';
+                btn.classList.add('pulse-blue');
+            } else {
+                const btn = document.getElementById('btn-continue');
+                btn.style.opacity = 0.5;
+                btn.style.pointerEvents = 'none';
+                btn.classList.remove('pulse-blue');
+            }
+        }
+
+        function renderDevices() {
+            const list = document.getElementById('added-devices');
+            const data = JSON.parse(localStorage.getItem('ws_scanned_devs') || "[]");
+            list.innerHTML = "";
+            
+            data.forEach(dev => {
+                list.innerHTML += `
+                    <div class="added-item">
+                        <div>
+                            <div style="font-weight: 600;"><i class="fa-solid fa-${dev.icon} text-blue" style="width: 25px;"></i> ${dev.name}</div>
+                            <div class="text-muted text-sm mt-5">${dev.room} — <span class="text-red font-weight-600">${dev.standbyPowerW}W Sleep Draw</span></div>
+                        </div>
+                        <button class="del-btn" onclick="deleteDev('${dev.id}')" title="Remove Appliance"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+            checkCompletion();
+        }
+
+        function deleteDev(id) {
+            let data = JSON.parse(localStorage.getItem('ws_scanned_devs') || "[]");
+            data = data.filter(d => d.id !== id);
+            localStorage.setItem('ws_scanned_devs', JSON.stringify(data));
+            renderDevices();
+        }
+
+        document.getElementById('btn-add-dev').onclick = () => {
+            const presetVal = document.getElementById('dev-preset').value;
+            const nameStr = presetVal.split('|')[0];
+            const icon = document.getElementById('dev-icon').value;
+            const watts = parseInt(document.getElementById('dev-watts').value || "0");
+            const room = document.getElementById('dev-room').value;
+            
+            if(!watts) return alert("Please specify standby watts.");
+
+            const device = {
+                id: `man_${Math.floor(Math.random()*10000)}`,
+                name: nameStr, icon, standbyPowerW: watts, room, pluggedIn: true, dailyCycle: [100]*24,
+                tipContext: "Manually tracked device. Ensure it remains unplugged when idle."
+            };
+
+            const savedDevs = JSON.parse(localStorage.getItem('ws_scanned_devs') || "[]");
+            savedDevs.push(device);
+            localStorage.setItem('ws_scanned_devs', JSON.stringify(savedDevs));
+
+            renderDevices();
+        };
+
+        // 2. Handle Groq Bill Image Upload
+        document.getElementById('file-bill').addEventListener('change', async (e) => {
+            if(!e.target.files.length) return;
+            const drop = document.getElementById('drop-bill');
+            const status = document.getElementById('status-bill');
+            drop.classList.add('scanning');
+            status.style.display = 'flex';
+            
+            try {
+                const formData = new FormData();
+                formData.append("file", e.target.files[0]);
+                const data = await API.uploadBillImage(formData);
+                localStorage.setItem('ws_scanned_bill', JSON.stringify(data.data));
+
+                document.getElementById('txt-bill').innerText = `Groq Llama Extracted: ₹${data.data.rate_per_kwh}/unit`;
+                document.getElementById('check-bill').classList.remove('hidden');
+                drop.classList.remove('scanning');
+                drop.style.borderColor = "var(--accent-green)";
+                billDone = true; 
+                renderDevices(); // Re-checks completion globally
+            } catch(e) {
+                console.error(e);
+                drop.classList.remove('scanning');
+                alert("Groq Backend Failed or Disabled. Check Python Server.");
+            }
+        });
+
+        // Initialize empty lists
+        renderDevices();
+    </script>
+</body>
+</html>

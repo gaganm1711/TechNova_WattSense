@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summarization - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .ai-panel { background: linear-gradient(135deg, rgba(171, 71, 188, 0.1), rgba(106, 27, 154, 0.2)); border: 1px solid #ab47bc; padding: 40px; border-radius: 20px; margin-bottom: 30px; position: relative; overflow: hidden; }
+        .ai-title { font-size: 1.8rem; font-weight: 800; color: #e1bee7; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .ai-text { font-size: 1.2rem; line-height: 1.8; color: #f3e5f5; }
+        .ai-decorator { position: absolute; right: -50px; top: -50px; font-size: 15rem; color: rgba(171, 71, 188, 0.05); pointer-events: none; }
+        
+        .compare-card { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 15px;}
+        .card-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 15px; }
+        .card-title { font-weight: 600; font-size: 1.2rem; color: var(--text-color); }
+        .state-row { display: flex; justify-content: space-between; align-items: center; }
+        .state-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
+        
+        .val-working { color: #ff9800; font-weight: bold; font-size: 1.2rem; }
+        .val-standby { color: #f44336; font-weight: bold; font-size: 1.2rem; }
+        .val-diff { color: #4caf50; font-weight: bold; font-size: 1rem; background: rgba(76, 175, 80, 0.1); padding: 5px 10px; border-radius: 20px;}
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">AI Summarization</h1>
+            <p class="page-subtitle">Expected outcomes and operational diagnostics (Standby vs Working Draw).</p>
+        </div>
+    </div>
+
+    <div class="ai-panel">
+        <i class="fa-solid fa-microchip ai-decorator"></i>
+        <div class="ai-title"><i class="fa-solid fa-robot text-gold glow"></i> Projected Outcomes & Savings</div>
+        <div class="ai-text" id="ai-summary-content">
+            <i class="fa-solid fa-circle-notch fa-spin"></i> Generating intelligence report...
+        </div>
+    </div>
+
+    <h2 style="margin-bottom: 20px; font-size: 1.5rem;">Device State Analysis: Working vs Standby</h2>
+    <div class="grid-3 mb-20" id="comparison-grid">
+        <!-- populated by JS -->
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/nav.js"></script>
+    <script>
+        Session.requireAuth();
+        injectNavigation('ai-summarization');
+
+        function estimateWorkingPower(deviceName, standbyPower) {
+            const map = {
+                'set-top box': standbyPower * 2,
+                'smart tv': standbyPower * 15, // TV takes much more when ON
+                'phone charger': 15, // Typically 15-20W charging
+                'microwave': 1200, 
+                'wi-fi router': standbyPower * 1.5,
+                'coffee maker': 800,
+                'pc': 350,
+                'monitor': 40
+            };
+            const w = map[deviceName.toLowerCase()];
+            if(w) return w;
+            return standbyPower * 10; // fallback arbitrary ratio for demo
+        }
+
+        async function initPage() {
+            let devs = JSON.parse(localStorage.getItem('ws_scanned_devs'));
+            if(!devs || devs.length === 0) {
+                // mock fallback if empty
+                devs = [
+                    { name: 'Smart TV', standbyPowerW: 5, room: 'Living Room' },
+                    { name: 'Microwave', standbyPowerW: 4, room: 'Kitchen' },
+                    { name: 'Phone Charger', standbyPowerW: 0.5, room: 'Bedroom' }
+                ];
+            }
+
+            const grid = document.getElementById('comparison-grid');
+            let totalStandby = 0;
+            let totalWorking = 0;
+
+            devs.forEach(dev => {
+                const standby = dev.standbyPowerW;
+                const working = estimateWorkingPower(dev.name, standby);
+                const diff = working - standby;
+                
+                totalStandby += standby;
+                totalWorking += working;
+
+                const cardHtml = `
+                    <div class="compare-card">
+                        <div class="card-header">
+                            <span class="card-title">${dev.name}</span>
+                            <span class="text-sm text-muted">${dev.room || 'Unknown'}</span>
+                        </div>
+                        <div class="state-row mt-10">
+                            <span class="state-label"><i class="fa-solid fa-bolt text-gold"></i> Working</span>
+                            <span class="val-working">${working.toFixed(1)}W</span>
+                        </div>
+                        <div class="state-row mt-10">
+                            <span class="state-label"><i class="fa-solid fa-moon text-blue"></i> Standby (Idle)</span>
+                            <span class="val-standby">${standby.toFixed(1)}W</span>
+                        </div>
+                        <div class="state-row mt-10" style="padding-top: 10px; border-top: 1px dotted rgba(255,255,255,0.1);">
+                            <span class="state-label">Difference</span>
+                            <span class="val-diff"><i class="fa-solid fa-arrow-down"></i> ${diff.toFixed(1)}W</span>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHtml);
+            });
+
+            // Make the AI Summary Text based on these vals
+            const wasteKwhYear = (totalStandby * 24 * 365) / 1000;
+            const wasteCostYear = wasteKwhYear * 8.0; // assuming $8 per kWh rate or similar currency multiplier used in app
+            
+            const summaryText = `
+                Based on the analysis of your <b>${devs.length}</b> plugged devices, we detect a continuous phantom drain of <b>${totalStandby.toFixed(1)} Watts</b>. 
+                <br><br>
+                <b>The Difference:</b> While your devices pull <b>${totalWorking.toFixed(1)}W</b> during active use, they continue siphoning power in standby mode. 
+                This seemingly small idle draw accumulates 24/7.
+                <br><br>
+                <b>Expected Outcome:</b> By eliminating this standby leakage (e.g. using WattSense auto-disconnect rules), you will prevent <b>${wasteKwhYear.toFixed(1)} kWh</b> of wasted energy annually. This translates directly to an expected monetary savings of roughly <b>₹&nbsp;${wasteCostYear.toFixed(0)}</b> per year and immediately cuts down associated carbon emissions.
+            `;
+            
+            setTimeout(() => {
+                document.getElementById('ai-summary-content').innerHTML = summaryText;
+            }, 800); // fake AI processing delay
+        }
+
+        initPage();
+    </script>
+</body>
+</html>

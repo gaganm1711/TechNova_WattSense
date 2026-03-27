@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rewards - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .badge-locked { filter: grayscale(100%); opacity: 0.5; }
+        .reward-item { border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 16px; text-align: center; transition: 0.3s; }
+        .reward-item:hover { background: rgba(255,255,255,0.03); transform: scale(1.02); }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Rewards & Badges</h1>
+            <p class="page-subtitle">Track achievements and convert blocked cash into real transactions.</p>
+        </div>
+        <div style="text-align: right;">
+            <div class="text-sm text-muted">Recovered Capital</div>
+            <div class="text-green count-up" style="font-size: 2.5rem; font-weight: 800;">₹1,240</div>
+        </div>
+    </div>
+
+    <h3 class="mb-20">Milestone Badges</h3>
+    <div class="grid-4 mb-20" style="margin-bottom: 40px;">
+        <div class="glass-panel text-center" style="padding: 20px; border-color: var(--accent-green);">
+            <i class="fa-solid fa-seedling text-green" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h4>Beginner</h4>
+            <div class="text-xs text-muted mt-10">Saved first ₹100</div>
+        </div>
+        <div class="glass-panel text-center" style="padding: 20px; border-color: var(--accent-blue);">
+            <i class="fa-solid fa-wallet text-blue" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h4>Saver</h4>
+            <div class="text-xs text-muted mt-10">Saved ₹1,000 Total</div>
+        </div>
+        <div class="glass-panel text-center badge-locked" style="padding: 20px;">
+            <i class="fa-solid fa-tree text-gold" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h4>Eco Hero</h4>
+            <div class="text-xs text-muted mt-10">Saved ₹3,000 Total</div>
+        </div>
+        <div class="glass-panel text-center badge-locked" style="padding: 20px;">
+            <i class="fa-solid fa-crown text-red" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h4>Grid Master</h4>
+            <div class="text-xs text-muted mt-10">Zero phantom load for 7 days</div>
+        </div>
+    </div>
+
+    <h3 class="mb-20">What can you buy with ₹1,240?</h3>
+    <div class="grid-3">
+        <div class="reward-item glass-panel">
+            <i class="fa-brands fa-netflix text-red" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h3 style="margin-bottom: 5px;">6 Months Netflix (Basic)</h3>
+            <p class="text-muted text-sm mb-20">₹199 / month</p>
+            <button class="btn-primary" style="background: var(--accent-red); width: 100%;">Goal Reached!</button>
+        </div>
+
+        <div class="reward-item glass-panel">
+            <i class="fa-solid fa-burger text-gold" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h3 style="margin-bottom: 5px;">8 Swiggy Deliveries</h3>
+            <p class="text-muted text-sm mb-20">Avg ₹150 / order</p>
+            <button class="btn-primary" style="background: var(--accent-gold); color: #000; width: 100%;">Goal Reached!</button>
+        </div>
+
+        <div class="reward-item glass-panel">
+            <i class="fa-solid fa-microchip text-blue" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h3 style="margin-bottom: 5px;">2 Smart IoT Plugs</h3>
+            <p class="text-muted text-sm mb-20">₹900 / plug</p>
+            <button class="btn-outline" style="width: 100%; border-color: var(--accent-blue); color: var(--accent-blue);">₹560 More Needed</button>
+            <div style="height: 4px; background: rgba(255,255,255,0.1); margin-top: 15px; border-radius: 2px; overflow: hidden;"><div style="width: 65%; height: 100%; background: var(--accent-blue);"></div></div>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>injectNavigation('rewards');</script>
+</body>
+</html>

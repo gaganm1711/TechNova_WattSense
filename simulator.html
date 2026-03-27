@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulator - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .sim-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 30px; }
+        .sim-list .device-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">What-if Simulator Sandbox</h1>
+            <p class="page-subtitle">Toggle appliances dynamically to simulate instantaneous financial recovery without affecting real configuration.</p>
+        </div>
+        <button class="btn-outline text-red" style="width: auto;"><i class="fa-solid fa-rotate-left"></i> Reset Simulation</button>
+    </div>
+
+    <div class="sim-grid">
+        <!-- Toggles Left -->
+        <div class="glass-panel" style="padding: 0;">
+            <div style="padding: 20px 25px; border-bottom: 1px solid var(--border-color);">
+                <h3><i class="fa-solid fa-power-off text-blue"></i> Virtual Circuit Breakers</h3>
+            </div>
+            <div class="sim-list" id="sim-devices">
+                <div class="device-item">
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.1rem;"><i class="fa-solid fa-tv" style="width: 25px; color: var(--accent-blue);"></i> Set-top Box</div>
+                        <div class="text-sm text-muted mt-10">Living Room (15W Leak)</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" checked onchange="updateSim()"><span class="slider"></span></label>
+                </div>
+                <!-- Simulating more logic rapidly without external scripts purely for UI feel -->
+                <div class="device-item">
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.1rem;"><i class="fa-solid fa-wifi" style="width: 25px; color: var(--accent-blue);"></i> Wi-Fi Router</div>
+                        <div class="text-sm text-muted mt-10">Hallway (8W Leak)</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" checked onchange="updateSim()"><span class="slider"></span></label>
+                </div>
+                <div class="device-item">
+                    <div>
+                        <div style="font-weight: 600; font-size: 1.1rem;"><i class="fa-solid fa-fire" style="width: 25px; color: var(--accent-blue);"></i> Microwave Clock</div>
+                        <div class="text-sm text-muted mt-10">Kitchen (4W Leak)</div>
+                    </div>
+                    <label class="switch"><input type="checkbox" checked onchange="updateSim()"><span class="slider"></span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dynamic Output Right -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="glass-panel" style="padding: 30px; text-align: center; border: 2px solid var(--accent-green); box-shadow: 0 0 20px rgba(52,199,89,0.2);">
+                <div class="text-muted text-sm mb-10">Simulated Money Saved (Yearly)</div>
+                <div id="sim-savings" class="text-green count-up" style="font-size: 4rem; font-weight: 800; text-shadow: 0 0 20px rgba(52,199,89,0.3);">₹0</div>
+            </div>
+            
+            <div class="glass-panel" style="padding: 30px; text-align: center;">
+                <div class="text-muted text-sm mb-10">Simulated CO₂ Reduction</div>
+                <div id="sim-co2" style="font-size: 2.5rem; font-weight: 800;">0 kg</div>
+            </div>
+            
+            <div class="glass-panel" style="padding: 20px; background: rgba(10,132,255,0.05);">
+                <i class="fa-solid fa-circle-info text-blue" style="margin-bottom: 10px;"></i>
+                <p class="text-sm text-muted" style="line-height: 1.5;">This sandbox does not affect your live metrics. Slide toggles down to watch how unplugging devices strictly correlates with mass energy preservation.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>
+        injectNavigation('simulator');
+        
+        function updateSim() {
+            const boxes = document.querySelectorAll('.sim-list input[type="checkbox"]');
+            let wattsSaved = 0;
+            if(!boxes[0].checked) wattsSaved += 15;
+            if(!boxes[1].checked) wattsSaved += 8;
+            if(!boxes[2].checked) wattsSaved += 4;
+            
+            const kwhSaved = (wattsSaved * 24 * 365) / 1000;
+            const moneySaved = Math.round(kwhSaved * 8.0);
+            const co2Saved = (kwhSaved * 0.82).toFixed(1);
+            
+            document.getElementById('sim-savings').innerText = `₹${moneySaved}`;
+            document.getElementById('sim-co2').innerText = `${co2Saved} kg`;
+            
+            // tiny animation flash
+            const amountEl = document.getElementById('sim-savings');
+            amountEl.style.transform = "scale(1.2)";
+            setTimeout(() => amountEl.style.transform = "scale(1)", 200);
+        }
+    </script>
+</body>
+</html>

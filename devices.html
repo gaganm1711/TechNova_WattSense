@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devices - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Device Fleet</h1>
+            <p class="page-subtitle">Manage, toggle, and audit all appliances tracking Phantom Power.</p>
+        </div>
+        <button class="btn-primary" style="width: auto;"><i class="fa-solid fa-plus"></i> Register New Device</button>
+    </div>
+
+    <div style="display: flex; gap: 15px; margin-bottom: 30px;">
+        <input type="text" placeholder="Search devices..." style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: #fff; width: 300px;">
+        <select style="padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: #fff;">
+            <option>All Rooms</option>
+            <option>Living Room</option>
+            <option>Bedroom</option>
+            <option>Kitchen</option>
+        </select>
+        <button class="btn-outline text-red" style="width: auto; margin-left: auto;">Force Kill All</button>
+    </div>
+
+    <div id="loading" class="text-center text-muted my-20"><i class="fa-solid fa-spinner fa-spin"></i> Syncing with AI Backend...</div>
+    
+    <!-- Dynamic JS Injection target -->
+    <div class="grid-3" id="device-paginated-list"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/nav.js"></script>
+    <script>
+        Session.requireAuth();
+        injectNavigation('devices');
+
+        async function init() {
+            try {
+                const arr = await API.getDevices();
+                const list = document.getElementById('device-paginated-list');
+                document.getElementById('loading').style.display = 'none';
+                list.innerHTML = '';
+
+                arr.forEach(dev => {
+                    // Quick local metric proxy representation
+                    const yrCost = ((dev.standbyPowerW * 24 * 365) / 1000) * 8.0;
+
+                    let bgStyle = dev.pluggedIn ? '' : 'border-color: var(--accent-green); background: rgba(52,199,89,0.05);';
+                    let costText = dev.pluggedIn ? `<span style="font-weight: 800; color: var(--accent-red);">₹${Math.round(yrCost)} / yr</span>` 
+                                                 : `<span style="font-weight: 800; color: var(--accent-green);">₹0 / yr (OFF)</span>`;
+
+                    list.innerHTML += `
+                        <div class="glass-panel" style="padding: 20px; ${bgStyle}">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                                <div class="vampire-icon" style="width: 50px; height: 50px; font-size: 1.5rem; background: rgba(10,132,255,0.1); color: var(--accent-blue);"><i class="fa-solid fa-${dev.icon}"></i></div>
+                                <label class="switch"><input type="checkbox" onchange="toggleDev('${dev.id}', this.checked)" ${dev.pluggedIn ? 'checked':''}><span class="slider"></span></label>
+                            </div>
+                            <h3 style="font-size: 1.2rem;">${dev.name}</h3>
+                            <p class="text-muted text-sm mb-20">${dev.room}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+                                ${costText}
+                                <a href="device-detail.html" class="text-blue text-sm">Deep Dive &rarr;</a>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                document.getElementById('loading').innerHTML = `<span class="text-red">Database offline. Please run FastAPI backend.</span>`;
+            }
+        }
+
+        async function toggleDev(id, isPlugged) {
+            await API.toggleDevice(id, isPlugged);
+            init(); // reload grid
+        }
+
+        init();
+    </script>
+</body>
+</html>

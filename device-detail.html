@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Set-top Box Insights - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="margin-bottom: 20px;"><a href="devices.html" class="text-muted"><i class="fa-solid fa-arrow-left"></i> Back to Devices</a></div>
+    
+    <div class="page-header" style="align-items: center;">
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="vampire-icon" style="width: 70px; height: 70px; font-size: 2rem; background: rgba(255,59,48,0.1); color: var(--accent-red);"><i class="fa-solid fa-tv"></i></div>
+            <div>
+                <h1 class="page-title">Set-top Box</h1>
+                <p class="page-subtitle"><i class="fa-solid fa-location-dot"></i> Living Room • ID: DEV-001</p>
+            </div>
+        </div>
+        <div>
+            <label class="switch" style="transform: scale(1.2);"><input type="checkbox" checked><span class="slider"></span></label>
+        </div>
+    </div>
+
+    <div class="grid-3 mb-20">
+        <div class="glass-panel" style="padding: 24px; text-align: center;">
+            <div class="text-muted text-sm mb-20">Live Continuous Waste</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent-red);">15 W</div>
+            <div class="text-muted text-sm mt-15">Currently drawing standby current.</div>
+        </div>
+        <div class="glass-panel" style="padding: 24px; text-align: center;">
+            <div class="text-muted text-sm mb-20">Yearly Financial Bleed</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent-red);">₹1,051</div>
+            <div class="text-muted text-sm mt-15">Based on ₹8.0/kWh standard rate.</div>
+        </div>
+        <div class="glass-panel" style="padding: 24px; text-align: center;">
+            <div class="text-muted text-sm mb-20">Action Requirement</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent-gold);"><i class="fa-solid fa-plug"></i> Unplug</div>
+            <div class="text-muted text-sm mt-15">Recommended: 1 AM - 7 AM</div>
+        </div>
+    </div>
+
+    <div class="glass-panel" style="padding: 30px; margin-bottom: 30px;">
+        <h3 style="margin-bottom: 20px;"><i class="fa-solid fa-timeline text-blue"></i> 24-Hour Behavioral Timeline Simulation</h3>
+        <p class="text-muted text-sm mb-20">Visualizing precisely when this device wastes power versus when it is actively being used.</p>
+        <div style="height: 350px;">
+            <canvas id="deepDiveChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Smart Tip Engine Inject -->
+    <div class="glass-panel" style="padding: 24px; background: rgba(255,204,0,0.05); border-left: 4px solid var(--accent-gold);">
+        <h3 style="margin-bottom: 10px; color: var(--accent-gold);"><i class="fa-solid fa-lightbulb"></i> WattSense Intelligence</h3>
+        <p style="font-size: 1.1rem; line-height: 1.5;">Our ML models indicate this Set-top box is left connected throughout the night while the attached screen (Smart TV) is OFF. Unplugging this device strictly between 1 AM and 7 AM will save approximately <strong>₹320/year</strong> without compromising active viewing hours.</p>
+        <button class="btn-outline mt-15" style="border-color: var(--accent-gold); color: var(--accent-gold); width: auto;">Set Automated IoT Rule</button>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>
+        injectNavigation('devices'); // Map to 'devices' since it's a sub-page
+        
+        // Render Chart explicitly for this template
+        const ctx = document.getElementById('deepDiveChart').getContext('2d');
+        const hours = Array.from({length: 24}, (_, i) => `${i}:00`);
+        const dailyCycleMock = [15,15,15,15,15,15,15, 2,2,2, 15,15,15,15, 2,2,2,2,2,2,2,2, 15,15]; // Watts wasted
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Standby Power Wasted (Watts)',
+                    data: dailyCycleMock,
+                    borderColor: '#ff3b30',
+                    backgroundColor: 'rgba(255, 59, 48, 0.2)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 4,
+                    pointBackgroundColor: '#ff3b30'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#fff'} }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

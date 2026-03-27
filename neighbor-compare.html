@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demographics - WattSense</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Neighbor Comparison</h1>
+            <p class="page-subtitle">How does your 2-BHK apartment stack up against 40,000 similar homes?</p>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="glass-panel" style="padding: 40px; text-align: center; border-left: 5px solid var(--accent-red);">
+            <h3 class="text-muted"><i class="fa-solid fa-user text-blue" style="font-size: 2rem; margin-bottom: 20px; display:block;"></i> Your Household</h3>
+            <div class="count-up text-red" style="font-size: 4rem; font-weight: 800; margin: 20px 0;">₹2,804</div>
+            <p class="text-muted">Total Phantom Waste / Year</p>
+        </div>
+
+        <div class="glass-panel" style="padding: 40px; text-align: center; border-left: 5px solid var(--accent-green);">
+            <h3 class="text-muted"><i class="fa-solid fa-users text-green" style="font-size: 2rem; margin-bottom: 20px; display:block;"></i> Efficient Neighbors</h3>
+            <div class="count-up text-green" style="font-size: 4rem; font-weight: 800; margin: 20px 0;">₹850</div>
+            <p class="text-muted">Average Phantom Waste (Top 20%)</p>
+        </div>
+    </div>
+
+    <!-- Comparative Bar -->
+    <div class="glass-panel mt-15" style="padding: 30px;">
+        <h3 style="margin-bottom: 20px;">You are wasting <span class="text-red">230%</span> more than efficient homes.</h3>
+        
+        <div style="position: relative; height: 40px; background: rgba(0,0,0,0.3); border-radius: 20px; overflow: hidden; margin-bottom: 10px;">
+            <!-- Neighbor Average -->
+            <div style="position: absolute; left: 0; top: 0; height: 100%; width: 30%; background: var(--accent-green);"></div>
+            <!-- Your Waste -->
+            <div style="position: absolute; left: 0; top: 0; height: 100%; width: 85%; background: var(--accent-red); opacity: 0.8; mix-blend-mode: screen;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9rem;">
+            <span>₹0 Extreme Efficiency</span>
+            <span>₹3,500 Average Waste</span>
+        </div>
+        
+        <div style="margin-top: 30px; background: rgba(52,199,89,0.05); border: 1px solid rgba(52,199,89,0.2); padding: 20px; border-radius: 12px; display: flex; gap: 20px; align-items: flex-start;">
+            <i class="fa-solid fa-lightbulb text-gold" style="font-size: 2rem;"></i>
+            <div>
+                <h4 style="color: var(--accent-gold); margin-bottom: 5px;">How to beat them?</h4>
+                <p class="text-muted">Your neighbors are likely using Smart Power Strips on their TV Centers. Your Set-top Box is drawing 15W 24/7, making up 40% of your disadvantage.</p>
+                <a href="device-detail.html" class="btn-primary mt-15" style="width: auto; padding: 5px 15px; font-size: 0.9rem; margin-top: 10px;">Automate Living Room</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/nav.js"></script>
+    <script>injectNavigation('neighbor-compare');</script>
+</body>
+</html>
