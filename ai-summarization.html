@@ -9,19 +9,19 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .ai-panel { background: linear-gradient(135deg, rgba(171, 71, 188, 0.1), rgba(106, 27, 154, 0.2)); border: 1px solid #ab47bc; padding: 40px; border-radius: 20px; margin-bottom: 30px; position: relative; overflow: hidden; }
-        .ai-title { font-size: 1.8rem; font-weight: 800; color: #e1bee7; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
-        .ai-text { font-size: 1.2rem; line-height: 1.8; color: #f3e5f5; }
+        .ai-title { font-size: 1.8rem; font-weight: 800; color: #9c27b0; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .ai-text { font-size: 1.2rem; line-height: 1.8; color: var(--text-main); }
         .ai-decorator { position: absolute; right: -50px; top: -50px; font-size: 15rem; color: rgba(171, 71, 188, 0.05); pointer-events: none; }
         
-        .compare-card { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; gap: 15px;}
-        .card-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 15px; }
-        .card-title { font-weight: 600; font-size: 1.2rem; color: var(--text-color); }
+        .compare-card { background: var(--card-bg); border-radius: 12px; padding: 25px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .card-header { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed var(--border-color); padding-bottom: 15px; }
+        .card-title { font-weight: 600; font-size: 1.2rem; color: var(--text-main); }
         .state-row { display: flex; justify-content: space-between; align-items: center; }
         .state-label { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px;}
         
-        .val-working { color: #ff9800; font-weight: bold; font-size: 1.2rem; }
-        .val-standby { color: #f44336; font-weight: bold; font-size: 1.2rem; }
-        .val-diff { color: #4caf50; font-weight: bold; font-size: 1rem; background: rgba(76, 175, 80, 0.1); padding: 5px 10px; border-radius: 20px;}
+        .val-working { color: #f59e0b; font-weight: bold; font-size: 1.2rem; }
+        .val-standby { color: #ef4444; font-weight: bold; font-size: 1.2rem; }
+        .val-diff { color: #10b981; font-weight: bold; font-size: 1rem; background: rgba(16, 185, 129, 0.1); padding: 5px 10px; border-radius: 20px;}
     </style>
 </head>
 <body>
