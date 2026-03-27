@@ -16,7 +16,7 @@ except ImportError:
 @router.post("/bill")
 async def analyze_bill_image(file: UploadFile = File(...)):
     # Explicitly using the GROQ API key provided by the user
-    api_key = "GROQ_API_KEY"
+    api_key = "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"
     
     if HAS_XAI and api_key:
         try:
